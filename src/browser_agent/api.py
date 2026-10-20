@@ -1,7 +1,7 @@
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 import logging
 from pathlib import Path
-from collections.abc import AsyncIterator
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse

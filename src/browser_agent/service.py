@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 from browser_agent.browser import execute_plan
 from browser_agent.models import ExecuteRequest, PlanRequest, PlanResponse
-from browser_agent.planner import ApprovalRequired, create_plan, validate_approvals
+from browser_agent.planner import create_plan, validate_approvals
 from browser_agent.storage import claim_run, get_run, save_run, update_run
 
 

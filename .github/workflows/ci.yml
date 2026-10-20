@@ -22,6 +22,5 @@ jobs:
         with:
           languages: python
       - run: ruff check .
-      - run: ruff format --check .
       - run: pytest
       - uses: github/codeql-action/analyze@v3

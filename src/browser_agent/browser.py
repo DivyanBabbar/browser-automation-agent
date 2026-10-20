@@ -127,6 +127,4 @@ def _assert_fill_target(locator: Any) -> None:
         "placeholder:el.getAttribute('placeholder'),autocomplete:el.getAttribute('autocomplete')," 
         "'aria-label':el.getAttribute('aria-label')})"
     )
-    from browser_agent.safety import validate_fill_target
-
     validate_fill_target(attributes)
