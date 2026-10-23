@@ -1,5 +1,6 @@
 FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 \
@@ -9,7 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml README.md ./
 COPY src ./src
-RUN pip install --no-cache-dir . && playwright install chromium && mkdir -p /app/data && chown -R 10001:10001 /app
+RUN mkdir -p /ms-playwright && pip install --no-cache-dir . && playwright install chromium \
+    && chmod -R a+rX /ms-playwright && mkdir -p /app/data && chown -R 10001:10001 /app
 EXPOSE 8000
 USER 10001
 CMD ["uvicorn", "browser_agent.api:app", "--host", "0.0.0.0", "--port", "8000", "--app-dir", "src"]

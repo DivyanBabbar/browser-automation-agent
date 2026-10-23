@@ -1,5 +1,6 @@
 import json
 import sqlite3
+from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -16,7 +17,7 @@ def _connect() -> sqlite3.Connection:
 
 
 def initialize_database() -> None:
-    with _connect() as connection:
+    with closing(_connect()) as connection, connection:
         connection.execute(
             """CREATE TABLE IF NOT EXISTS runs (
                 run_id TEXT PRIMARY KEY,
@@ -34,7 +35,7 @@ def initialize_database() -> None:
 
 
 def save_run(run: PlanResponse) -> None:
-    with _connect() as connection:
+    with closing(_connect()) as connection, connection:
         connection.execute(
             """INSERT INTO runs(
                 run_id, goal, start_url, allowed_domains, status, snapshot, plan, execution, created_at
@@ -54,7 +55,7 @@ def save_run(run: PlanResponse) -> None:
 
 
 def get_run(run_id: str) -> PlanResponse | None:
-    with _connect() as connection:
+    with closing(_connect()) as connection, connection:
         row = connection.execute("SELECT * FROM runs WHERE run_id = ?", (run_id,)).fetchone()
     if row is None:
         return None
@@ -72,7 +73,7 @@ def get_run(run_id: str) -> PlanResponse | None:
 
 
 def claim_run(run_id: str) -> bool:
-    with _connect() as connection:
+    with closing(_connect()) as connection, connection:
         cursor = connection.execute(
             "UPDATE runs SET status = 'running' WHERE run_id = ? AND status = 'planned'",
             (run_id,),
@@ -81,7 +82,7 @@ def claim_run(run_id: str) -> bool:
 
 
 def update_run(run: PlanResponse) -> None:
-    with _connect() as connection:
+    with closing(_connect()) as connection, connection:
         connection.execute(
             "UPDATE runs SET status = ?, execution = ? WHERE run_id = ?",
             (run.status, json.dumps(run.execution), run.run_id),
@@ -89,10 +90,9 @@ def update_run(run: PlanResponse) -> None:
 
 
 def list_runs(limit: int = 20) -> list[HistoryItem]:
-    with _connect() as connection:
+    with closing(_connect()) as connection, connection:
         rows = connection.execute(
-            "SELECT run_id, goal, start_url, status, created_at FROM runs "
-            "ORDER BY created_at DESC LIMIT ?",
+            "SELECT run_id, goal, start_url, status, created_at FROM runs ORDER BY created_at DESC LIMIT ?",
             (limit,),
         ).fetchall()
     return [

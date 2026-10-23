@@ -64,9 +64,7 @@ def validate_fill_target(attributes: dict[str, str | None]) -> None:
     field_type = (attributes.get("type") or "").lower()
     autocomplete = (attributes.get("autocomplete") or "").lower()
     hints = " ".join(
-        value or ""
-        for key, value in attributes.items()
-        if key in {"name", "id", "placeholder", "aria-label"}
+        value or "" for key, value in attributes.items() if key in {"name", "id", "placeholder", "aria-label"}
     )
     if field_type in {"password", "hidden", "file"}:
         raise BrowserPolicyError(f"Filling {field_type} fields is not allowed.")

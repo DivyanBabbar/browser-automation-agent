@@ -33,6 +33,13 @@ docker compose up --build
 
 Open <http://localhost:8000>. Enter a public page URL, describe the task, and optionally add exact hostnames for resources the page needs. Review the plan and approve each state-changing action before execution. API docs are at `/docs`.
 
+### 2–5 minute demo
+
+1. Enter a public page you are allowed to inspect and describe a read-only task, such as finding the support options.
+2. Select **Inspect & plan** and review the page snapshot, proposed steps, and safety notes.
+3. Approve each click or form fill individually, then select **Execute approved steps**.
+4. Review the execution results and before/after screenshots. The planner requires `OPENAI_API_KEY`; it does not submit forms until you approve the exact steps.
+
 ### Local development
 
 ```bash

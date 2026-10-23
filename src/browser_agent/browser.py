@@ -28,9 +28,7 @@ def _guarded_context(browser: Browser, allowed_domains: list[str]) -> BrowserCon
 
 def _read_page(page: Page) -> tuple[str, list[dict[str, str]]]:
     text = page.locator("body").inner_text(timeout=settings.browser_timeout_ms)
-    controls: list[dict[str, str]] = page.locator(
-        "a, button, input, textarea, select, [role='button']"
-    ).evaluate_all(
+    controls: list[dict[str, str]] = page.locator("a, button, input, textarea, select, [role='button']").evaluate_all(
         """elements => elements.slice(0, 50).map((el) => ({
             tag: el.tagName.toLowerCase(),
             text: (el.innerText || el.getAttribute('aria-label') || '').trim().slice(0, 180),
@@ -104,9 +102,7 @@ def execute_plan(
                     elif step.action == "wait":
                         page.wait_for_timeout(step.wait_ms or 0)
                         output = f"Waited {step.wait_ms or 0} ms"
-                    results.append(
-                        {"step_id": step.id, "action": step.action, "result": output, "url": page.url}
-                    )
+                    results.append({"step_id": step.id, "action": step.action, "result": output, "url": page.url})
                 page.screenshot(path=str(screenshot), full_page=True, animations="disabled")
                 return results
             finally:
@@ -123,8 +119,8 @@ def screenshot_path(run_id: str, phase: str) -> Path:
 
 def _assert_fill_target(locator: Any) -> None:
     attributes = locator.evaluate(
-        "el => ({type:el.getAttribute('type'),name:el.getAttribute('name'),id:el.id," 
-        "placeholder:el.getAttribute('placeholder'),autocomplete:el.getAttribute('autocomplete')," 
+        "el => ({type:el.getAttribute('type'),name:el.getAttribute('name'),id:el.id,"
+        "placeholder:el.getAttribute('placeholder'),autocomplete:el.getAttribute('autocomplete'),"
         "'aria-label':el.getAttribute('aria-label')})"
     )
     validate_fill_target(attributes)
